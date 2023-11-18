@@ -1,16 +1,11 @@
 import React from 'react'
 import MainHeader from './MainHeader'
 
-const MainLayout = ({children}: { children: React.ReactNode }) => {
+export default function MainLayout({children}: { children: React.ReactNode }) {
     return (
-        <div>
+    <div className='bg-white w-screen min-h-screen'>
         <MainHeader/>
-        <h1>MainLayout</h1>
-        <hr />
         <main> {children} </main>
-        </div>
+    </div>
     )
 }
-
-export default MainLayout
-

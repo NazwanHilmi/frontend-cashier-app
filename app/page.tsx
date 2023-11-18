@@ -1,9 +1,8 @@
-import ProductCard from './components/ProductCard'
+import MainLayout from '@/components/MainLayout'
 
 export default function Home() {
   return (
     <main>
-      <ProductCard />
     </main>
   )
 }

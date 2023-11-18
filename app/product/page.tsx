@@ -1,5 +1,5 @@
 export const metadata = {
-    title : "Product",
+    title: "Product",
 }
 
 import React from 'react'
@@ -22,7 +22,7 @@ const getProduct = async () => {
 }
 
 const ProductList = async () => {
-    const product : Product[] = await getProduct()
+    const product: Product[] = await getProduct()
     return (
         <div className='title-product'>
             <h1>Product List</h1>
@@ -37,6 +37,28 @@ const ProductList = async () => {
                     </Link>
                 ))}
             </ul>
+            <table className='w-auto'>
+                <thead>
+                    <tr>
+                        <th className='text-md px-6 py-3'>Name</th>
+                        <th>Category ID</th>
+                        <th>Price</th>
+                        <th>Stock</th>
+                        <th>Tag</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {product.map((product, index) => (
+                        <tr key={product.id}>
+                            <td className=''><a href={`/product/${product.id}`}>{product.name}</a></td>
+                            <td className=''>{product.category_id}</td>
+                            <td className=''>{product.price}</td>
+                            <td className=''>{product.stock}</td>
+                            <td className=''>{product.tag}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
         </div>
     );
 };
