@@ -2,7 +2,6 @@ export const metadata = {
     title: "Meja",
 }
 import axios from 'axios'
-import Link from 'next/link'
 import AddMeja from './addMeja'
 import DeleteMeja from './deleteMeja'
 import EditMeja from './editMeja'
