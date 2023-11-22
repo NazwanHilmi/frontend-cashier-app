@@ -46,7 +46,9 @@ const AddType = () => {
         return res.data.data;
     };
     
-    const { data: categories, error: categoriesError } = useSWR('http://localhost:8000/api/category', getCategory);
+    const { data: categories, 
+        error: categoriesError 
+    } = useSWR('http://localhost:8000/api/category', getCategory);
 
     useEffect(() => {
     console.log(categories);
