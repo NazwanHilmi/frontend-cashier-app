@@ -22,6 +22,7 @@ type orderedMenu = {
     unit_price: number;
     sub_total: number;
     image: string
+    stok: number
 }
 
 const handleDescription = (string: string) => {
@@ -40,10 +41,11 @@ const handleFormatPrice = (price: number) => {
     }).format(price)
 }
 
-const handleStok = (stok: number) => {
-    return stok === 0
+const handleStok = (stok: number | string) => {
+    return stok === 0 || stok === "-" 
 
 }
+
 
 const Menu = ({ menu, type, setOrderedMenu, orderedMenu, setTotal }: { menu: Menu[], type: string, setOrderedMenu: React.Dispatch<React.SetStateAction<orderedMenu[]>>, orderedMenu: orderedMenu[], setTotal: React.Dispatch<React.SetStateAction<number>>}) => {
 const handleChoiceMenu = (
@@ -51,7 +53,8 @@ const handleChoiceMenu = (
         name: string,
         quantity: number,
         unit_price: number,
-        image: string
+        image: string,
+        stok: number
     ) => {
         const existingMenu = orderedMenu.find((item) => item.menu_id === menu_id);
 
@@ -82,6 +85,7 @@ const handleChoiceMenu = (
                 unit_price,
                 sub_total: quantity * unit_price,   
                 image,
+                stok
             };
 
             setOrderedMenu((prev) => [...prev, newMenu]);
@@ -98,7 +102,7 @@ const handleChoiceMenu = (
         <div className="w-full grid md:grid-cols-3 gap-2">
             {menu.map((item, index) => (
                 <div key={index} className="card card-compact bg-slate-200 shadow-xs">
-                    {/* <figure className="shadow h-40"><img className="w-full h-full object-cover" src={item.image} alt="Menu Image" /></figure> */}
+                    {/* <figure className="shadow h -40"><img className="w-full h-full object-cover" src={item.image} alt="Menu Image" /></figure> */}
                     <div className="card-body">
                         <h2 className="card-title font-bold">{item.nama_menu}</h2>
                         {/* <p className=''>{handleDescription(item.deskripsi)}</p> */}
@@ -107,7 +111,7 @@ const handleChoiceMenu = (
                             <span className="text-xs">Stok : {item.stok.jumlah}</span>
                             <div className="flex justify-end w-full">
                             {
-                                handleStok(item.stok.jumlah) ? <button className="p-2 text-red-500 flex items-center text-sm italic cursor-default"> <CiWarning size={20} className="font-bold" /> Unavailable</button> : <button className='btn btn-sm text-white bg-blue-primary hover:bg-opacity-80 hover:bg-blue-primary border-none capitalize' onClick={() => handleChoiceMenu(item.id, item.nama_menu, 1, item.harga, item.image)} disabled={handleStok(item.stok.jumlah)}>{handleStok(item.stok.jumlah) ? "Unavailable" : "Pilih Menu"}</button> 
+                                handleStok(item.stok.jumlah) ? <button className="p-2 text-red-500 flex items-center text-sm italic cursor-default"> <CiWarning size={20} className="font-bold" /> Unavailable</button> : <button className='btn btn-sm text-white bg-blue-primary hover:bg-opacity-80 hover:bg-blue-primary border-none capitalize' onClick={() => handleChoiceMenu(item.id, item.nama_menu, 1, item.harga, item.image, item.stok.jumlah)} disabled={handleStok(item.stok.jumlah)}>{handleStok(item.stok.jumlah) ? "Unavailable" : "Pilih Menu"}</button> 
                             }
                             </div>
                             

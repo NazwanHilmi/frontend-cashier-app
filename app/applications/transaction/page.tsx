@@ -17,10 +17,14 @@ type Menu = {
     nama_menu: string;
     harga: number;
     image: string;
-    deskripsi: string;
+    note: string;
     type: {
         id: number;
         nama: string
+    }
+    stok : {
+        id: number;
+        jumlah: number
     }
 }
 

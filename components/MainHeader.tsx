@@ -57,13 +57,13 @@ const menu1: MenuItem[] = [
         isActive: false,
     },
     {
-        name : <h1>List Transaksi</h1>,
+        name : <h1>Laporan Transaksi</h1>,
         icon: <FaTableCellsLarge size={18} className='text-white'/>,
         link : "/data/listTransaksi",
         isActive: false,
     },
     {
-        name : <h1>List Detail Transaksi</h1>,
+        name : <h1>Laporan Detail Transaksi</h1>,
         icon: <FaTableCellsLarge size={18} className='text-white'/>,
         link : "/data/listDetailTransaksi",
         isActive: false,

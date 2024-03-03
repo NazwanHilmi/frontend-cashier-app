@@ -28,8 +28,8 @@ const AddMenu = ({ type } : { type: Type[] }) => {
         setModal(!modal);
         setNamaMenu('');
         setHarga('');
-        setDeskripsi('');
         setImage(null);
+        setDeskripsi('');
         setTypeId('');
     };
 

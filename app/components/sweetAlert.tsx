@@ -1,18 +1,25 @@
+import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 import Swal from 'sweetalert2';
 
-const SweetAlert = ({ status, message, onClose }: {status: number, message: string, onClose: any}) => {
+const SweetAlert = ({ status, message, isTransaksi, id, resetState }: {status: number | boolean, message: string, isTransaksi: boolean, id?: number, resetState: () => void}) => {
+    const router = useRouter()
 useEffect(() => {
     Swal.fire({
         html: status === 200 ? `<strong>${message}</strong>` : `<strong>${message}</strong>`,
         icon: status === 200 ? 'success' : 'error',
-        showConfirmButton: true,
-        }).then(() => {
-            if (onClose) {
-            onClose();
+        showDenyButton: true,
+        showConfirmButton: isTransaksi,
+        denyButtonText: 'OK',
+        confirmButtonText: isTransaksi ? 'Cetak Faktur' : undefined
+        }).then((result) => { 
+            if (result.isConfirmed && resetState) {
+                resetState()
+            }else {
+                router.refresh();
             }
         });
-    }, [status, onClose]);
+    }, [status]);
 
     return null;
 };

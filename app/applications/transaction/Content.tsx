@@ -44,7 +44,8 @@ type orderedMenu = {
     quantity: number;
     unit_price: number;
     sub_total: number;
-    image: string
+    image: string;
+    stok: number;
 }
 
 const Content = ({type, menu, paymentMethod}: {type: TypeItem[], menu: MenuType[], paymentMethod: PaymentMethod[]}) => {
@@ -60,8 +61,10 @@ const Content = ({type, menu, paymentMethod}: {type: TypeItem[], menu: MenuType[
     const [orderedMenu, setOrderedMenu] = useState<orderedMenu[]>([])
     const [selectedPayment, setSelectedPayment] = useState(0)
     const [isMutating, setIsMutating] = useState(false);
-    const [status, setStatus] = useState<any>(null);
+    const [status, setStatus] = useState<boolean | number>(false);
     const [message, setMessage] = useState<any>(null);
+    const [data, setData] = useState<any>(null);
+    const [cetakFaktur, setCetakFaktur] = useState<boolean>(false)
 
     const router = useRouter()
 
@@ -100,6 +103,14 @@ const Content = ({type, menu, paymentMethod}: {type: TypeItem[], menu: MenuType[
         return true
     }
 
+    const resetState = () => {
+        setCetakFaktur(true)
+        setStatus(false)
+        router.push(`/applications/faktur/${data.id}`)
+    }
+
+        
+
     const handleShowMenu = () => {
         if (!searching && !selecting)
             return <Menu menu={menu} type='Semua' setOrderedMenu={setOrderedMenu} orderedMenu={orderedMenu} setTotal={setTotal} />
@@ -120,17 +131,18 @@ const Content = ({type, menu, paymentMethod}: {type: TypeItem[], menu: MenuType[
             minimumFractionDigits: 0
         }).format(price)
     }
-
+    
     const handleTransaction = async () => {
         const data = {
             "total_harga": total,
             "payment_method_id": selectedPayment,
             "note": note,
-            "menu": orderedMenu
+            "menu": orderedMenu,
         }
 
+        
         setIsMutating(true);
-
+        
         try {
             const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/transaksi`, data)
             setOrderedMenu([])
@@ -141,6 +153,7 @@ const Content = ({type, menu, paymentMethod}: {type: TypeItem[], menu: MenuType[
             console.log(res)
             setStatus(res.status);
             setMessage(res.data?.message)
+            setData(res.data?.data)
 
             router.refresh()
         } catch (error: any) {
@@ -148,6 +161,7 @@ const Content = ({type, menu, paymentMethod}: {type: TypeItem[], menu: MenuType[
             setIsMutating(false);
             setStatus(error.response.status);
             setMessage('Transaksi gagal ditambahkan')
+
             router.refresh();
         }
     }
@@ -185,7 +199,7 @@ const Content = ({type, menu, paymentMethod}: {type: TypeItem[], menu: MenuType[
                     <button className="btn btn-sm bg-blue-primary text-white hover:bg-blue-primary border-none hover:bg-opacity-80 capitalize w-full" onClick={handleTransaction}>Pembayaran</button>
                 )}
             </div>
-            {status && <SweetAlert status={status} message={message} onClose={() => setStatus(null)} />}
+            {status && <SweetAlert status={status}  message={message}  isTransaksi={true} resetState={resetState}  />}
         </div>
     )
 }

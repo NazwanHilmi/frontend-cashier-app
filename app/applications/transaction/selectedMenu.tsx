@@ -1,6 +1,6 @@
 'use client'
 
-import React from "react"
+import React, { useState } from "react"
 import { FaTrash } from "react-icons/fa";
 
 type orderedMenu = {
@@ -10,9 +10,11 @@ type orderedMenu = {
     unit_price: number;
     sub_total: number;
     image: string;
+    stok: number;
 }
 
 const SelectedMenu = ({orderedMenu, setOrderedMenu, setTotal} :{orderedMenu: orderedMenu[], setOrderedMenu: React.Dispatch<React.SetStateAction<orderedMenu[]>>, setTotal: React.Dispatch<React.SetStateAction<number>> }) =>  {
+    const [stokLimit, setStokLimit] = useState('');
 
     const handleFormatPrice = (price: number) => {
         return new Intl.NumberFormat('id-ID', {
@@ -32,13 +34,23 @@ const SelectedMenu = ({orderedMenu, setOrderedMenu, setTotal} :{orderedMenu: ord
 
         const updatedMenu = orderedMenu.map((menu) => {
             if (menu.menu_id === menu_id) {
-                const priceDifference = (numericQuantity - menu.quantity) * menu.unit_price;
-                setTotal(prev => prev + priceDifference);
-                return {
-                    ...menu,
-                    quantity: numericQuantity,
-                    sub_total: numericQuantity * menu.unit_price,
-                };
+
+                if(menu.quantity <= menu.stok){
+
+                    const priceDifference = (numericQuantity - menu.quantity) * menu.unit_price;
+                    setTotal(prev => prev + priceDifference);
+                    return {
+                        ...menu,
+                        quantity: numericQuantity,
+                        sub_total: numericQuantity * menu.unit_price,
+                    };
+                }else {
+                    setStokLimit('Jumlah pesanan melebihi stok yang tersedia')
+                    setTimeout(() => {
+                        setStokLimit('');
+                    }, 2000);
+                    return menu;
+                }
             } else {
                 return menu;
             }
@@ -51,11 +63,20 @@ const SelectedMenu = ({orderedMenu, setOrderedMenu, setTotal} :{orderedMenu: ord
         const updatedMenu = orderedMenu.map((menu) => {
 
             if (menu.menu_id === menu_id) {
-                setTotal(prev => prev + menu.unit_price)
-                return {
-                    ...menu,
-                    quantity: menu.quantity + 1,
-                    sub_total: (menu.quantity + 1) * menu.unit_price,
+
+                if(menu.quantity + 1 <= menu.stok){
+                    setTotal(prev => prev + menu.unit_price)
+                    return {
+                        ...menu,
+                        quantity: menu.quantity + 1,
+                        sub_total: (menu.quantity + 1) * menu.unit_price,
+                    }
+                }else {
+                    setStokLimit('Jumlah pesanan melebihi stok yang tersedia');
+                    setTimeout(() => {
+                        setStokLimit('');
+                    }, 2000);
+                    return menu
                 }
             } else {
                 return menu
@@ -104,7 +125,7 @@ const SelectedMenu = ({orderedMenu, setOrderedMenu, setTotal} :{orderedMenu: ord
     };
 
     return (
-        <div className="flex flex-col gap-4 w-full overflow-y-scroll selected-menus pr-2 mb-4">
+        <div className="flex flex-col gap-4 w-full pr-2 mb-4 overflow-y-auto max-h-10px">
             {orderedMenu.map((item, index) => (
                 <div key={index} className="flex items-start justify-start gap-2 w-full">
                     {/* <figure><img className="w-12 h-12 bg-white border-black border-2 rounded-sm" src={item.image} alt="image menu" /></figure> */}
@@ -121,10 +142,7 @@ const SelectedMenu = ({orderedMenu, setOrderedMenu, setTotal} :{orderedMenu: ord
                                 <span className="text-slate-400">{handleFormatPrice(item.sub_total)}</span>
                             </div>
                         </div>
-                        {/* <div className="flex gap-5 mb-4">
-                            <h1>Note : </h1>
-                            <input type="text" className="bg-white border-black" />
-                        </div> */}
+                        {stokLimit && <p className="text-red-500 italic text-sm">{stokLimit}</p>}
                     </div>
                 </div>
             ))}

@@ -1,7 +1,3 @@
-export const metadata = {
-    title: "Stock",
-}
-
 import React from 'react'
 import axios from 'axios'
 import AddStok from './addStok'
@@ -35,19 +31,20 @@ const getMenu = async () => {
 }
 
 const StokList = async () => {
+
     let stok: Stok[] = await getStok();
     let menu: Menu[] = await getMenu();
     
     return (
         <div>
             <header className='w-full p-4 bg-white shadow-lg'>
-                <h1 className="text-lg font-montserrat font-semibold">{metadata.title}</h1>
+                <h1 className="text-lg font-montserrat font-semibold">stok</h1>
             </header>
         <div className="px-10 py-5">
             <div className="py-2">
                 <AddStok menu={menu} />
             </div>
-            <div className="overflow-x-auto rounded-md">
+            <div className="overflow-x-auto rounded-md" id='printPDF'>
                 <table className='table'>
                     <thead>
                         <tr className='text-white bg-gray-700'>
